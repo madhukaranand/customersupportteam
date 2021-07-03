@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>Customer Service team</h1>
+        <input id="mysearch" type="text" placeholder="Search.."><br /><br />
+        <input id="myinput" />
+        <select name="type" id="type">
+            <option value="sms">sms</option>
+            <option value="phone">phone</option>
+            <option value="both">both</option>
+        </select>
+        <button id="add">Add</button>
+        <br /><br />
+        Suppression List
+        <button id="API">
+            API
+        </button>
+        <table id="myTable">
+            <tbody></tbody>
+        </table>
+    </body>
+    <script>
+        document.querySelector("#myinput").addEventListener("keypress", function (evt) {
+            if (evt.which < 48 || evt.which > 57){
+                evt.preventDefault();
+            }
+        });
+
+        $("button#add").click( function(){
+            var inputValue = $('#myinput').val();
+            var dropdownValue = $('select').val();
+            
+            if(dropdownValue == "phone"){
+                $('table tbody').append("<tr><td>1"+inputValue.split("").reverse().join("")+"</td><td>"+dropdownValue+"</td></tr>");
+            } else {
+                $('table tbody').append("<tr><td>1"+inputValue+"</td><td>"+dropdownValue+"</td></tr>");
+            }
+
+            $('#myinput').val("");
+        });
+
+        $(document).ready(function(){
+            $("#mysearch").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        $("button#api").click( function(){
+            var myRows = [];
+            var $headers = $("th");
+            var $rows = $("tbody").each(function(index) {
+                $cells = $(this).find("tr");
+                myRows[index] = {};
+                $cells.each(function(cellIndex) {
+                    if(index){
+                        myRows[index] = ", "+$(this).text();
+                    } else {
+                        myRows[index] = $(this).text();
+                    }
+                });    
+            });
+
+            // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+            var myObj = {};
+            console.log(myRows);
+            myObj.myrows = myRows;
+            alert(JSON.stringify(myObj))
+            // $("textarea").val(myObj);
+        });
+    </script>
+</html>
